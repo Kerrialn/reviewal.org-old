@@ -1,14 +1,8 @@
 # reviewal.org - frontend
 
-## Project setup
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+## Project setup for development
+1. `yarn install`
+2. `yarn serve`
 
 ### Compiles and minifies for production
 ```
