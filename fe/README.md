@@ -1,4 +1,4 @@
-# fe
+# reviewal.org - frontend
 
 ## Project setup
 ```
