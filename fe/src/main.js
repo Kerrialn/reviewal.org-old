@@ -12,8 +12,12 @@ Vue.config.productionTip = false
 Vue.use(axios)
 Vue.use(Buefy)
 
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app')
+require('@/store/subscriber')
+
+store.dispatch('auth/attempt', localStorage.getItem('token')).then(()=>{
+  new Vue({
+    router,
+    store,
+    render: h => h(App)
+  }).$mount('#app')
+});

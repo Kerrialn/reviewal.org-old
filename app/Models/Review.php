@@ -9,6 +9,13 @@ class Review extends Model
 {
     use HasFactory;
 
+    protected  $fillable = [
+        'title',
+        'summary',
+        'user_id',
+        'address_id'
+    ];
+
     protected $with = ['rating'];
 
     public function user()
@@ -23,6 +30,6 @@ class Review extends Model
 
     public function address()
     {
-        return $this->belongsTo(Address::class);
+        return $this->hasOne(Address::class);
     }
 }

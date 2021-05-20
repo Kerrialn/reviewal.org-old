@@ -1,7 +1,10 @@
+import store from './index'
 import AddressForm from "@/components/CreateForm/AddressForm"
 import ReviewForm from "@/components/CreateForm/ReviewForm"
 import RatingForm from "@/components/CreateForm/RatingForm"
 import ConfirmationForm from "@/components/CreateForm/ConfirmationForm"
+import { ToastProgrammatic as Toast } from 'buefy'
+import axois from 'axios'
 
 export default {
   namespaced: true,
@@ -82,10 +85,24 @@ export default {
         commit('setActive', state.stages.current++ );
       }
     },
-    submit(){
-      
+    async submit(_, form){
+        store.commit('setLoading', true)
+        await axois.post('create', form).then(()=>{
+          Toast.open({
+            message: `Review created <b>successfully</b>`,
+            type: 'is-success'
+          })
+          store.commit('setLoading', false)
+        }).catch(()=>{
+          Toast.open({
+            message: `An error occurred`,
+            type: 'is-danger'
+          })
+        }).finally(()=>{
+          store.commit('setLoading', false)
+        })
+      },
     },
-  },
   mutations: {
     setActive(state, newActiveState){
       state.stages.active = newActiveState

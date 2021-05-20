@@ -5,6 +5,7 @@ import Address from '@/views/Address'
 import Create from '@/views/Create'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
+import store from '@/store/index'
 
 Vue.use(VueRouter)
 
@@ -27,7 +28,15 @@ const routes = [
   {
     path: '/create',
     name: 'Create',
-    component: Create
+    component: Create,
+    beforeEnter: (to, from, next) => {
+      if(!store.getters['auth/isAuthenticated']){
+        return next({
+          name: 'Login'
+        })
+      }
+      next()
+    }
   },
   {
     path: '/address/:id',

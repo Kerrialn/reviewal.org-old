@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +23,15 @@ Route::get('/', function () {
 });
 
 
+
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
 Route::post('/search', [AddressController::class, 'search']);
-Route::apiResource('addresses', AddressController::class);
-Route::apiResource('reviews', ReviewController::class);
+
+
+Route::middleware('auth:api')->group(function () {
+    Route::get('/profile', [AuthController::class, 'profile']);
+    Route::post('/create', [Controller::class, 'create']);
+    Route::apiResource('addresses', AddressController::class);
+    Route::apiResource('reviews', ReviewController::class);
+});
