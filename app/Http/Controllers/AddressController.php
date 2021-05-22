@@ -12,15 +12,25 @@ class AddressController extends Controller
     public function search(Request $request)
     {
 
-        $lineOne = strtolower($request->input('lineOne'));
+        $premise = strtolower($request->input('premise'));
+        $floor = $request->input('floor');
+        $lineOne = strtolower($request->input('lineOne')) ?? '';
         $lineTwo = strtolower($request->input('lineTwo')) ?? '';
         $district = strtolower($request->input('district')) ?? '';
         $city = strtolower($request->input('city')) ?? '';
         $postalCode = strtolower($request->input('postalCode')) ?? '';
         $countryCode = strtolower($request->input('countryCode')) ?? '';
 
+        if ($premise) {
+            $addresses = Address::where('premise', '=', $premise);
+        }
+
+        if ($floor) {
+            $addresses->where('floor', '=', $floor);
+        }
+
         if ($lineOne) {
-            $addresses = Address::where('line_one', 'LIKE', '%' . $lineOne . '%');
+            $addresses->where('line_one', 'LIKE', '%' . $lineOne . '%');
         }
 
         if ($lineTwo) {
@@ -44,6 +54,8 @@ class AddressController extends Controller
 
         return [
             'search' => [
+                'premise' => $premise,
+                'floor' => $floor,
                 'lineOne' => $lineOne,
                 'lineTwo' => $lineTwo,
                 'district' => $district,
@@ -73,16 +85,32 @@ class AddressController extends Controller
      */
     public function store(Request $request)
     {
-        $address = new Address;
-        $address->line_one  = strtolower($request->lineOne);
-        $address->line_two  = strtolower($request->lineTwo);
-        $address->district  = strtolower($request->district);
-        $address->city  = strtolower($request->city);
-        $address->postal_code  = strtolower($request->postalCode);
-        $address->country_code = strtolower($request->countryCode);
-        $address->save();
 
-        return $address;
+        $validate = $request->validate([
+            'premise'  => 'required',
+            'floor'  => 'required|int',
+            'line_one'  => 'required|string',
+            'city'  => 'required|string',
+            'postal_code'  => 'required|string',
+            'country_code' => 'required|string',
+        ]);
+
+        if (!$validate) {
+            return response([
+                'message' => 'an error occurred'
+            ], 400);
+        }
+
+        $address = Address::firstOrCreate([
+            'premise'  => $request->premise,
+            'floor'  => $request->floor,
+            'line_one'  => strtolower($request->line_one),
+            'city'  => strtolower($request->city),
+            'postal_code'  => strtolower($request->postal_code),
+            'country_code' => strtolower($request->country_code),
+        ]);
+        $address->save();
+        return response($address);
     }
 
     /**

@@ -1,127 +1,122 @@
 <template>
-    <div>
-        <div class="is-size-3">Address</div>
-        <b-field>
-            <b-input
-                @keyup.native="submit"
-                v-model="keyword"
-                placeholder="Address"
-            ></b-input>
-        </b-field>
-        <small v-if="response.search">
-            line-one: {{ response.search.lineOne }}, line-two:
-            {{ response.search.lineTwo }}, district:
-            {{ response.search.district }}, city: {{ response.search.city }},
-            post code: {{ response.search.postalCode }}, country:
-            {{ response.search.countryCode }}
-        </small>
+    <div class="card">
+        <div class="card-content">
+            <b-field>
+                <b-input
+                    v-model="address.premise"
+                    placeholder="Premise number or name"
+                ></b-input>
+            </b-field>
+            <b-field>
+                <b-numberinput
+                    v-model="address.floor"
+                    placeholder="floor"
+                    min="0"
+                ></b-numberinput>
+            </b-field>
 
-        <div class="columns is-centered mt-3" v-if="response.addresses">
-            <div class="column is-12 scroll-select">
-                <div
-                    v-for="address in response.addresses"
-                    :key="address.id"
-                    :class="[
-                        'card',
-                        'mb-3',
-                        'cursor',
-                        {
-                            'has-background-primary has-text-white':
-                                createFormAddress === address
-                        }
-                    ]"
-                    @click="selectAddress(address)"
+            <b-field>
+                <b-input
+                    v-model="address.line_one"
+                    placeholder="Address line one"
+                ></b-input>
+            </b-field>
+            <b-field>
+                <b-input v-model="address.city" placeholder="city"></b-input>
+            </b-field>
+            <b-field>
+                <b-input
+                    v-model="address.postal_code"
+                    placeholder="postal code"
+                ></b-input>
+            </b-field>
+            <b-field>
+                <b-select
+                    v-model="address.country_code"
+                    expanded
+                    placeholder="country"
                 >
-                    <div class="card-content">
-                        {{ address.line_one }}, {{ address.line_two }},
-                        {{ address.district }}, {{ address.city }},
-                        {{ address.postal_code }}, {{ address.country_code }}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="columns is-centered">
-            <b-button
-                @click="storeNewAddress()"
-                v-if="validAddress"
-                type="primary"
-                >add address</b-button
-            >
+                    <option
+                        v-for="country in utils.countries"
+                        :key="country.code"
+                        :value="country.code"
+                    >
+                        {{ country.name }}
+                    </option>
+                </b-select>
+            </b-field>
         </div>
     </div>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
+const countries = require("@/assets/data/countries.json");
+
 export default {
-    name: "AddressForm",
+    name: "AddressFormModal",
     data() {
         return {
-            keyword: "",
-            selected: null,
-            options: null
+            utils: {
+                countries: countries
+            }
         };
     },
+    mounted() {
+        this.setIsPreviousDisabled(true);
+        this.isFormValid ? this.setIsNextDisabled(true) : this.complete();
+    },
     watch: {
-        createFormAddress() {
-            if (!this.createFormAddress) {
-                this.setIsNextDisabled(true);
-            } else {
-                this.setIsNextDisabled(false);
-            }
+        address: {
+            handler() {
+                this.isFormValid
+                    ? this.setIsNextDisabled(true)
+                    : this.complete();
+            },
+            deep: true
         }
     },
     computed: {
         ...mapGetters({
-            response: "address/getAddresses",
-            createFormAddress: "createForm/getAddress"
+            address: "createForm/getAddress"
         }),
-        validAddress() {
+        isFormValid() {
             return (
-                this.response.addresses < 1 &&
-                this.response.search.lineOne &&
-                this.response.search.district &&
-                this.response.search.city &&
-                this.response.search.postalCode &&
-                this.response.search.countryCode
+                !this.premise ||
+                !this.line_one ||
+                !this.city ||
+                !this.postal_code ||
+                !this.country_code
             );
+        },
+        premise() {
+            return this.address.premise;
+        },
+        line_one() {
+            return this.address.line_one;
+        },
+        city() {
+            return this.address.city;
+        },
+        postal_code() {
+            return this.address.postal_code;
+        },
+        country_code() {
+            return this.address.country_code;
         }
     },
     methods: {
         ...mapMutations({
             setAddress: "createForm/setAddress",
-            setIsPreiousDisabled: "createForm/setIsPreviousDisabled",
-            setIsNextDisabled: "createForm/setIsNextDisabled"
+            setIsNextDisabled: "createForm/setIsNextDisabled",
+            setIsPreviousDisabled: "createForm/setIsPreviousDisabled"
         }),
-        ...mapActions({
-            search: "address/search",
-            store: "address/store"
-        }),
-        async submit() {
-            if (this.keyword.trim()) {
-                await this.search(this.keyword);
-            }
-        },
-        selectAddress(address) {
-            this.selected = address;
-            this.setAddress(address);
-        },
-        async storeNewAddress() {
-            await this.store(this.keyword);
-            await this.search(this.keyword);
+        complete() {
+            this.setIsNextDisabled(false);
+            this.setAddress(this.address);
         }
     }
 };
 </script>
 
-<style>
-.scroll-select {
-    height: 50vh;
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
-
-.cursor:hover {
-    cursor: pointer;
-}
-</style>
+<style></style>

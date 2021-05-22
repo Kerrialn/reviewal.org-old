@@ -61,9 +61,7 @@ class AuthController extends Controller
     $authUserId = Auth::user()->id;
     $user = User::find($authUserId);
 
-    return response([
-      'user' => $user
-    ]);
+    return response($user);
   }
 
   /**
@@ -83,7 +81,9 @@ class AuthController extends Controller
       'name' => $request->name,
       'email' => $request->email,
       'password' => Hash::make($request->password)
-    ])) {
+    ])->sendEmailVerificationNotification()) {
+
+
       response([
         'message' => 'registration failed'
       ], 400);

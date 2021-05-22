@@ -3,9 +3,13 @@
         <div class="columns is-centered is-mobile">
             <div class="column is-10-mobile is-8-desktop">
                 <section>
+                    <div class="title is-4 m-0">Create Form</div>
                     <div v-for="step in stages.steps" :key="step.id">
                         <transition name="fade" mode="out-in">
                             <div v-if="stages.current === step.id">
+                                <div class="subtitle is-4">
+                                    {{ step.label }}
+                                </div>
                                 <component
                                     v-bind:is="step.component"
                                 ></component>
@@ -103,7 +107,7 @@ export default {
         }),
         submit() {
             this.store({
-                address: this.getAddress.id,
+                address: this.getAddress,
                 review: this.getReview,
                 rating: this.getRating
             });
@@ -118,5 +122,6 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 40px;
 }
 </style>

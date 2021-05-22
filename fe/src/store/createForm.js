@@ -41,14 +41,24 @@ export default {
         },
         {
           id: 4,
-          label: "Confirmation",
+          label: "Affidavit",
           component: ConfirmationForm,
           displayed: true,
         },
       ],
     },
-    address: {},
-    review: {},
+    address: {
+      premise: '',
+      floor: 0,
+      line_one: '',
+      city: '',
+      postal_code: '',
+      country_code: '',
+    },
+    review: {
+      title: '',
+      summary: ''
+    },
     rating: {}
   },
   getters:{

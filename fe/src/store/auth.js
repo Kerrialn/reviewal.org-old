@@ -26,7 +26,13 @@ export default {
     async login({ dispatch }, credentials){
 
     store.commit('setLoading', true)
-    let response = await axios.post('login', credentials)
+    let response = await axios.post('login', credentials).then(()=>{
+      Toast.open({
+        duration: 5000,
+        message: 'Login successful',
+        type: 'is-success'
+      })
+    })
       .catch(() =>{
         Toast.open({
           duration: 5000,
@@ -44,7 +50,6 @@ export default {
     async attempt({commit, state}, token){
       if(token){
         commit('setToken', token)
-        console.log('TOKEN: ', token)
       }
 
       if(!state.token){
@@ -54,11 +59,6 @@ export default {
       try{
         let response = await axios.get('/profile')
         commit('setUser', response.data)
-        Toast.open({
-          duration: 5000,
-          message: 'Login successful',
-          type: 'is-success'
-        })
       }catch(e){
         Toast.open({
           duration: 5000,

@@ -2,8 +2,8 @@
     <div>
         <div :class="['sticky', { shadow: isShadow }]">
             <div class="subtitle has-text-centered">
-                {{ address.line_one }}, {{ address.line_two }},
-                {{ address.district }}, {{ address.city }},
+                {{ address.premise }}, floor {{ address.floor }},
+                {{ address.line_one }}, {{ address.city }},
                 {{ address.postal_code }},
                 {{ address.country_code }}
             </div>

@@ -1,11 +1,17 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/views/Home'
+import About from '@/views/About'
 import Address from '@/views/Address'
 import Create from '@/views/Create'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
+import Dashboard from '@/views/Dashboard'
+import Terms from '@/views/Terms'
 import store from '@/store/index'
+import { ToastProgrammatic as Toast } from 'buefy'
+
+
 
 Vue.use(VueRouter)
 
@@ -26,6 +32,19 @@ const routes = [
     component: Register
   },
   {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: Dashboard,
+    beforeEnter: (to, from, next) => {
+      if(!store.getters['auth/isAuthenticated']){
+        return next({
+          name: 'Login'
+        })
+      }
+      next()
+    }
+  },
+  {
     path: '/create',
     name: 'Create',
     component: Create,
@@ -42,8 +61,37 @@ const routes = [
     path: '/address/:id',
     name: 'Address',
     component: Address,
-    props: true
-  }
+    props: true,
+    beforeEnter: (to, from, next) => {
+      if(!store.getters['auth/isAuthenticated']){
+        return next({
+          name: 'Login'
+        })
+      }else if(!store.getters['auth/getUser'].reviews.length){
+
+        Toast.open({
+          duration: 5000,
+          message: 'add a review to gain full access',
+          type: 'is-warning'
+        })
+
+        return next({
+          name: 'Create'
+        })
+      }
+      next()
+    }
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: About
+  },
+  {
+    path: '/terms',
+    name: 'Terms',
+    component: Terms
+  },
 ]
 
 const router = new VueRouter({

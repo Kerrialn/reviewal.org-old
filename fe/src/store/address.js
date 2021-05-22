@@ -16,17 +16,10 @@ export default {
     }
   },
   actions:{
-    async store({commit}, query){
+    async store({commit}, form){
+      console.log(form);
       store.commit('setLoading', true)
-      let params = query.split(',');
-      await axois.post('addresses', {
-        lineOne: params[0],
-        lineTwo: params[1] ?? '',
-        district: params[2] ?? '',
-        city: params[3] ?? '',
-        postalCode: params[4] ?? '',
-        countryCode: params[5] ?? '',
-      }).then((response)=>{
+      await axois.post('addresses', form).then((response)=>{
         commit('setAddresses', response.data)
         store.commit('setLoading', false)
       })
@@ -38,12 +31,14 @@ export default {
       store.commit('setLoading', true)
       await axois.post('search',
       {
-        lineOne: params[0],
-        lineTwo: params[1] ?? '',
-        district: params[2] ?? '',
-        city: params[3] ?? '',
-        postalCode: params[4] ?? '',
-        countryCode: params[5] ?? '',
+        premise: params[0] ?? '',
+        floor: params[1] ?? '',
+        lineOne: params[2] ?? '',
+        lineTwo: params[3] ?? '',
+        district: params[4] ?? '',
+        city: params[5] ?? '',
+        postalCode: params[6] ?? '',
+        countryCode: params[7] ?? '',
 
       }).then((response)=>{
         commit('setAddresses', response.data)

@@ -57,7 +57,7 @@ export default {
                 password: this.password
             }).finally(() => {
                 this.$router.push({
-                    name: "Create"
+                    name: "Dashboard"
                 });
             });
         }

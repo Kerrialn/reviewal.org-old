@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="mb-3">
         <b-navbar>
             <template #brand>
                 <b-navbar-item tag="router-link" :to="{ name: 'Home' }">
@@ -11,12 +11,16 @@
                 <b-navbar-item
                     v-if="isAuthenticated"
                     tag="router-link"
+                    :to="{ name: 'Dashboard' }"
+                >
+                    {{ user.name }}
+                </b-navbar-item>
+                <b-navbar-item
+                    v-if="isAuthenticated"
+                    tag="router-link"
                     :to="{ name: 'Create' }"
                 >
                     Create
-                </b-navbar-item>
-                <b-navbar-item v-if="isAuthenticated && user" tag="div">
-                    {{ user.name }}
                 </b-navbar-item>
             </template>
 
@@ -67,4 +71,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped></style>
