@@ -10,7 +10,6 @@
                     >
                         <router-link
                             tag="a"
-                            class="card-footer-item"
                             :to="{
                                 name: 'Address',
                                 params: { id: review.address.id }
@@ -81,9 +80,13 @@
 import { mapGetters } from "vuex";
 export default {
     name: "Dashboard",
+    mounted() {
+        this.$store.dispatch("auth/attempt", this.token);
+    },
     computed: {
         ...mapGetters({
-            user: "auth/getUser"
+            user: "auth/getUser",
+            token: "auth/getToken"
         })
     }
 };

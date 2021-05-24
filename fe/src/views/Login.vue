@@ -52,14 +52,16 @@ export default {
             login: "auth/login"
         }),
         async submit() {
-            await this.login({
-                email: this.email,
-                password: this.password
-            }).finally(() => {
-                this.$router.push({
-                    name: "Dashboard"
+            if (this.email || this.password) {
+                await this.login({
+                    email: this.email,
+                    password: this.password
+                }).finally(() => {
+                    this.$router.push({
+                        name: "Dashboard"
+                    });
                 });
-            });
+            }
         }
     }
 };

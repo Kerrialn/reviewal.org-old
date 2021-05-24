@@ -9,13 +9,17 @@
             <div class="container">
                 <div class="columns is-mobile is-centered">
                     <div class="column is-10-mobile is-6-desktop">
-                        Copyright © 2021 reviewal.org
+                        Copyright © {{ year }} reviewal.org
                     </div>
                     <div
                         class="column is-10-mobile is-6-desktop has-text-right"
                     >
                         <router-link tag="a" :to="{ name: 'About' }"
                             >About</router-link
+                        >
+                        |
+                        <router-link tag="a" :to="{ name: 'Format' }"
+                            >Formating</router-link
                         >
                         |
                         <router-link tag="a" :to="{ name: 'Terms' }"
@@ -42,7 +46,10 @@ export default {
         ...mapGetters({
             isLoading: "getLoading",
             message: "getMessage"
-        })
+        }),
+        year() {
+            return new Date().getFullYear();
+        }
     },
     mounted() {
         if (this.message.content) {

@@ -56,15 +56,17 @@ export default {
             register: "auth/register"
         }),
         async submit() {
-            await this.register({
-                name: this.name,
-                email: this.email,
-                password: this.password
-            }).then(() => {
-                this.$router.push({
-                    name: "Login"
+            if (this.name || this.email || this.password) {
+                await this.register({
+                    name: this.name,
+                    email: this.email,
+                    password: this.password
+                }).then(() => {
+                    this.$router.push({
+                        name: "Login"
+                    });
                 });
-            });
+            }
         }
     }
 };

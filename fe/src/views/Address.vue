@@ -245,7 +245,7 @@ export default {
     },
     methods: {
         onScroll() {
-            if (window.scrollY > 0) {
+            if (window.scrollY > 55) {
                 this.isShadow = true;
             } else {
                 this.isShadow = false;
@@ -264,7 +264,7 @@ export default {
     background-color: #ffffff;
 }
 .shadow {
-    box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%),
+    box-shadow: 0 0.5em 1em 0em rgb(10 10 10 / 10%),
         0 0px 0 1px rgb(10 10 10 / 2%);
 }
 </style>

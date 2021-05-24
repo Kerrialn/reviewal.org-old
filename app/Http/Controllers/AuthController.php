@@ -23,15 +23,8 @@ class AuthController extends Controller
       'password' => 'required|string',
     ]);
 
-
-
     if (!Auth::attempt($login)) {
-      return response([
-        'flash' => [
-          'message' => 'invalid credentials',
-          'type' => 'is-danger'
-        ],
-      ], 400);
+      abort(400, 'invalid credentials');
     }
 
     $authUserId = Auth::user()->id;
@@ -60,6 +53,10 @@ class AuthController extends Controller
 
     $authUserId = Auth::user()->id;
     $user = User::find($authUserId);
+
+    if (!$user) {
+      abort(400, 'failed to get profile');
+    }
 
     return response($user);
   }

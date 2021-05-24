@@ -7,16 +7,56 @@
                 placeholder="Address"
             ></b-input>
         </b-field>
-        <small v-if="response.search">
-            <span>premise: {{ response.search.premise }},</span>
-            <span>floor: {{ response.search.floor }},</span>
-            <span>line-one: {{ response.search.lineOne }},</span>
-            <span>line-two:{{ response.search.lineTwo }},</span>
-            <span>district:{{ response.search.district }}, </span>
-            <span>city: {{ response.search.city }},</span>
-            <span>post code: {{ response.search.postalCode }}, </span>
-            <span>country:{{ response.search.countryCode }}</span>
-        </small>
+        <router-link class="" :to="{ name: 'Format' }" tag="a"
+            >Follow the required address format</router-link
+        >
+        <nav class="level is-mobile" v-if="response.search">
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="has-text-weight-bold">
+                        <b-tooltip
+                            label="Address name or number"
+                            type="is-primary is-light"
+                            position="is-top"
+                            animated="false"
+                        >
+                            Premise
+                        </b-tooltip>
+                    </p>
+                    <p>{{ response.search.premise || "--" }}</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="has-text-weight-bold">Floor</p>
+                    <p>{{ response.search.floor || "--" }}</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="has-text-weight-bold">Line one</p>
+                    <p>{{ response.search.lineOne || "--" }}</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="has-text-weight-bold">City</p>
+                    <p>{{ response.search.city || "--" }}</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="has-text-weight-bold">Postal code</p>
+                    <p>{{ response.search.postalCode || "--" }}</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="has-text-weight-bold">Country</p>
+                    <p>{{ response.search.countryCode || "--" }}</p>
+                </div>
+            </div>
+        </nav>
 
         <div class="columns is-centered mt-3">
             <div class="column is-12 scroll-select">
@@ -36,10 +76,9 @@
                         @click="selectAddress(address)"
                     >
                         <div class="card-content">
-                            {{ address.premise }},
+                            {{ address.premise }}, floor:
                             {{ address.floor == 0 ? "G" : address.floor }},
-                            {{ address.line_one }}, {{ address.line_two }},
-                            {{ address.district }}, {{ address.city }},
+                            {{ address.line_one }}, {{ address.city }},
                             {{ address.postal_code }},
                             {{ address.country_code }}
                         </div>
@@ -47,32 +86,24 @@
                 </div>
             </div>
         </div>
-        <div class="columns is-centered">
-            <div class="column is-12">
-                <div class="has-text-centered block">
-                    <a @click="addressFormModalOpen = !addressFormModalOpen">{{
-                        addressFormModalOpen
-                            ? "close address form"
-                            : "can't find address?"
-                    }}</a>
-                </div>
-                <address-form-modal
-                    v-if="addressFormModalOpen"
-                ></address-form-modal>
-            </div>
+        <div class="column is-12 has-text-centered">
+            <b-button
+                @click="
+                    setAddressComponent(() =>
+                        import('@/components/CreateForm/AddressForm')
+                    )
+                "
+                label="can't find address?"
+            />
         </div>
     </div>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
-import AddressFormModal from "../AddressFormModal.vue";
 
 export default {
     name: "AddressForm",
-    components: {
-        AddressFormModal
-    },
     data() {
         return {
             keyword: null,
@@ -100,7 +131,8 @@ export default {
         ...mapMutations({
             setAddress: "createForm/setAddress",
             setIsPreiousDisabled: "createForm/setIsPreviousDisabled",
-            setIsNextDisabled: "createForm/setIsNextDisabled"
+            setIsNextDisabled: "createForm/setIsNextDisabled",
+            setAddressComponent: "createForm/setAddressComponent"
         }),
         ...mapActions({
             search: "address/search",

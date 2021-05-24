@@ -1,13 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/views/Home'
-import About from '@/views/About'
 import Address from '@/views/Address'
 import Create from '@/views/Create'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
 import Dashboard from '@/views/Dashboard'
-import Terms from '@/views/Terms'
 import store from '@/store/index'
 import { ToastProgrammatic as Toast } from 'buefy'
 
@@ -85,12 +83,17 @@ const routes = [
   {
     path: '/about',
     name: 'About',
-    component: About
+    component: () => import(/* webpackChunkName: "about" */'@/views/About')
   },
   {
     path: '/terms',
     name: 'Terms',
-    component: Terms
+    component: () => import(/* webpackChunkName: "terms" */'@/views/Terms')
+  },
+  {
+    path: '/format',
+    name: 'Format',
+    component: () => import(/* webpackChunkName: "terms" */'@/views/Format')
   },
 ]
 

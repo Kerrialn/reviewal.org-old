@@ -101,6 +101,7 @@ export default {
             setIsLast: "createForm/setIsLast"
         }),
         ...mapActions({
+            resetForm: "createForm/resetForm",
             previous: "createForm/previous",
             next: "createForm/next",
             store: "createForm/submit"
@@ -110,6 +111,11 @@ export default {
                 address: this.getAddress,
                 review: this.getReview,
                 rating: this.getRating
+            }).finally(() => {
+                this.resetForm();
+                this.$router.push({
+                    name: "Dashboard"
+                });
             });
         }
     }

@@ -4,8 +4,9 @@
             <div class="column is-10-mobile is-8-desktop">
                 <div class="title">Search address</div>
 
-                <b-field>
+                <b-field class="m-0">
                     <b-input
+                        @keyup.enter.native="submit()"
                         v-model="keyword"
                         size="is-large"
                         expanded
@@ -19,6 +20,9 @@
                         />
                     </p>
                 </b-field>
+                <router-link class="" :to="{ name: 'Format' }" tag="a"
+                    >Follow the required address format</router-link
+                >
             </div>
         </div>
 
@@ -27,7 +31,16 @@
                 <nav class="level is-mobile" v-if="response.search">
                     <div class="level-item has-text-centered">
                         <div>
-                            <p class="has-text-weight-bold">Premise</p>
+                            <p class="has-text-weight-bold">
+                                <b-tooltip
+                                    label="Address name or number"
+                                    type="is-primary is-light"
+                                    position="is-top"
+                                    animated="false"
+                                >
+                                    Premise
+                                </b-tooltip>
+                            </p>
                             <p>{{ response.search.premise || "--" }}</p>
                         </div>
                     </div>
@@ -41,18 +54,6 @@
                         <div>
                             <p class="has-text-weight-bold">Line one</p>
                             <p>{{ response.search.lineOne || "--" }}</p>
-                        </div>
-                    </div>
-                    <div class="level-item has-text-centered">
-                        <div>
-                            <p class="has-text-weight-bold">Line two</p>
-                            <p>{{ response.search.lineTwo || "--" }}</p>
-                        </div>
-                    </div>
-                    <div class="level-item has-text-centered">
-                        <div>
-                            <p class="has-text-weight-bold">District</p>
-                            <p>{{ response.search.district || "--" }}</p>
                         </div>
                     </div>
                     <div class="level-item has-text-centered">
@@ -181,13 +182,7 @@ export default {
         }),
         async submit() {
             if (this.keyword.trim()) {
-                await this.search(this.keyword).catch(() => {
-                    this.$buefy.toast.open({
-                        duration: 5000,
-                        message: "an error occured",
-                        type: "is-danger"
-                    });
-                });
+                await this.search(this.keyword);
             }
         }
     }

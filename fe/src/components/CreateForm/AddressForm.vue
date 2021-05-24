@@ -1,67 +1,73 @@
 <template>
-    <div class="card">
-        <div class="card-content">
-            <b-field>
-                <b-input
-                    v-model="address.premise"
-                    placeholder="Premise number or name"
-                ></b-input>
-            </b-field>
-            <b-field>
-                <b-numberinput
-                    v-model="address.floor"
-                    placeholder="floor"
-                    min="0"
-                ></b-numberinput>
-            </b-field>
+    <div>
+        <div class="card">
+            <div class="card-content">
+                <b-field>
+                    <b-input
+                        v-model="address.premise"
+                        placeholder="Premise number or name"
+                    ></b-input>
+                </b-field>
+                <b-field>
+                    <b-numberinput
+                        v-model="address.floor"
+                        placeholder="floor"
+                        min="0"
+                    ></b-numberinput>
+                </b-field>
 
-            <b-field>
-                <b-input
-                    v-model="address.line_one"
-                    placeholder="Address line one"
-                ></b-input>
-            </b-field>
-            <b-field>
-                <b-input v-model="address.city" placeholder="city"></b-input>
-            </b-field>
-            <b-field>
-                <b-input
-                    v-model="address.postal_code"
-                    placeholder="postal code"
-                ></b-input>
-            </b-field>
-            <b-field>
-                <b-select
-                    v-model="address.country_code"
-                    expanded
-                    placeholder="country"
-                >
-                    <option
-                        v-for="country in utils.countries"
-                        :key="country.code"
-                        :value="country.code"
+                <b-field>
+                    <b-input
+                        v-model="address.line_one"
+                        placeholder="Address line one"
+                    ></b-input>
+                </b-field>
+                <b-field>
+                    <b-input
+                        v-model="address.city"
+                        placeholder="city"
+                    ></b-input>
+                </b-field>
+                <b-field>
+                    <b-input
+                        v-model="address.postal_code"
+                        placeholder="postal code"
+                    ></b-input>
+                </b-field>
+                <b-field>
+                    <b-select
+                        v-model="address.country_code"
+                        expanded
+                        placeholder="country"
                     >
-                        {{ country.name }}
-                    </option>
-                </b-select>
-            </b-field>
+                        <option value="cz">Czechia</option>
+                    </b-select>
+                </b-field>
+                <router-link class="" :to="{ name: 'Format' }" tag="a"
+                    >Follow the required address format</router-link
+                >
+            </div>
+        </div>
+        <div class="column is-12 has-text-centered">
+            <b-button
+                @click.native="
+                    setAddressComponent(() =>
+                        import(
+                            '@/components/CreateForm/AddressAutocompleteForm'
+                        )
+                    )
+                "
+                label="back to address selection"
+            />
         </div>
     </div>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
-const countries = require("@/assets/data/countries.json");
 
 export default {
-    name: "AddressFormModal",
-    data() {
-        return {
-            utils: {
-                countries: countries
-            }
-        };
-    },
+    name: "AddressForm",
     mounted() {
         this.setIsPreviousDisabled(true);
         this.isFormValid ? this.setIsNextDisabled(true) : this.complete();
@@ -109,7 +115,8 @@ export default {
         ...mapMutations({
             setAddress: "createForm/setAddress",
             setIsNextDisabled: "createForm/setIsNextDisabled",
-            setIsPreviousDisabled: "createForm/setIsPreviousDisabled"
+            setIsPreviousDisabled: "createForm/setIsPreviousDisabled",
+            setAddressComponent: "createForm/setAddressComponent"
         }),
         complete() {
             this.setIsNextDisabled(false);

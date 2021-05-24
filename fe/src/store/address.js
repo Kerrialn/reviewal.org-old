@@ -1,5 +1,7 @@
 import axois from 'axios'
 import store from './index'
+import { ToastProgrammatic as Toast } from 'buefy'
+
 
 export default {
   namespaced: true,
@@ -34,17 +36,21 @@ export default {
         premise: params[0] ?? '',
         floor: params[1] ?? '',
         lineOne: params[2] ?? '',
-        lineTwo: params[3] ?? '',
-        district: params[4] ?? '',
-        city: params[5] ?? '',
-        postalCode: params[6] ?? '',
-        countryCode: params[7] ?? '',
+        city: params[3] ?? '',
+        postalCode: params[4] ?? '',
+        countryCode: params[5] ?? '',
 
       }).then((response)=>{
         commit('setAddresses', response.data)
         store.commit('setLoading', false)
       })
-      store.commit('setLoading', false)
+      .catch((error)=>{
+        if (error.response) {
+        Toast.open({duration: 5000, message: error.response.data.message, type: 'is-danger'})
+        }
+      }).finally(()=>{
+        store.commit('setLoading', false)
+      })
     },
     async fetchAddress({commit}, id){
       store.commit('setLoading', true)
@@ -52,6 +58,10 @@ export default {
         console.log(response.data);
         commit('setAddress', response.data)
         store.commit('setLoading', false)
+      }).catch((error)=>{
+        if (error.response) {
+        Toast.open({duration: 5000, message: error.response.data.message, type: 'is-danger'})
+        }
       })
       store.commit('setLoading', false)
     }

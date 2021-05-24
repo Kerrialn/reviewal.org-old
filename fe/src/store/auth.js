@@ -24,28 +24,17 @@ export default {
   },
   actions:{
     async login({ dispatch }, credentials){
-
-    store.commit('setLoading', true)
-    let response = await axios.post('login', credentials).then(()=>{
-      Toast.open({
-        duration: 5000,
-        message: 'Login successful',
-        type: 'is-success'
+      store.commit('setLoading', true)
+      return await axios.post('login', credentials).then((response)=>{
+        dispatch('attempt', response.data.token)
+        store.commit('setLoading', false)
+        Toast.open({duration: 5000, message: 'Login successful', type: 'is-success'})
       })
-    })
-      .catch(() =>{
-        Toast.open({
-          duration: 5000,
-          message: 'Login failed',
-          type: 'is-danger'
-        })
-          
-    }).finally(()=>{
-      store.commit('setLoading', false)
-    });
-
-    return dispatch('attempt', response.data.token)
-    
+      .catch((error) =>{
+        if (error.response) {
+          Toast.open({duration: 5000, message: error.response.data.message, type: "is-danger"});
+        }           
+      })
     },
     async attempt({commit, state}, token){
       if(token){
@@ -57,14 +46,14 @@ export default {
       }
 
       try{
-        let response = await axios.get('/profile')
-        commit('setUser', response.data)
-      }catch(e){
-        Toast.open({
-          duration: 5000,
-          message: e,
-          type: 'is-danger'
+        return await axios.get('/profile').then((response)=>{
+          commit('setUser', response.data)
         })
+      
+      }catch(error){
+        if (error.response) {
+          Toast.open({duration: 5000,message: error.response.data.message,type: "is-danger"});
+        }    
         commit('setUser', null)
         commit('setToken', null)
       }
@@ -80,15 +69,11 @@ export default {
 
       store.commit('setLoading', true)
       return await axios.post('register', form).then(()=>{
-        Toast.open({
-          message: 'registration successful',
-          type: 'is-success'
-        })
-      }).catch(()=>{
-        Toast.open({
-          message: 'registration failed',
-          type: 'is-danger'
-        })
+        Toast.open({duration: 5000,message: 'registration successful',type: 'is-success'})
+      }).catch((error)=>{
+        if (error.response) {
+          Toast.open({ duration: 5000, message: error.response.data.message, type: "is-danger"});
+        }  
       }).finally(()=>{
         store.commit('setLoading', false)
       });

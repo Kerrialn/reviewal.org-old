@@ -14,12 +14,10 @@ class AddressController extends Controller
 
         $premise = strtolower($request->input('premise'));
         $floor = $request->input('floor');
-        $lineOne = strtolower($request->input('lineOne')) ?? '';
-        $lineTwo = strtolower($request->input('lineTwo')) ?? '';
-        $district = strtolower($request->input('district')) ?? '';
-        $city = strtolower($request->input('city')) ?? '';
-        $postalCode = strtolower($request->input('postalCode')) ?? '';
-        $countryCode = strtolower($request->input('countryCode')) ?? '';
+        $lineOne = strtolower($request->input('lineOne'));
+        $city = strtolower($request->input('city'));
+        $postalCode = strtolower($request->input('postalCode'));
+        $countryCode = strtolower($request->input('countryCode'));
 
         if ($premise) {
             $addresses = Address::where('premise', '=', $premise);
@@ -33,19 +31,14 @@ class AddressController extends Controller
             $addresses->where('line_one', 'LIKE', '%' . $lineOne . '%');
         }
 
-        if ($lineTwo) {
-            $addresses->where('line_two', 'LIKE', '%' . $lineTwo . '%');
-        }
-
-        if ($district) {
-            $addresses->where('district', '=', $district);
-        }
         if ($city) {
             $addresses->where('city', 'LIKE', '%' . $city . '%');
         }
+
         if ($postalCode) {
             $addresses->where('postal_code', '=', $postalCode);
         }
+
         if ($countryCode) {
             $addresses->where('country_code', 'LIKE', $countryCode);
         }
@@ -57,8 +50,6 @@ class AddressController extends Controller
                 'premise' => $premise,
                 'floor' => $floor,
                 'lineOne' => $lineOne,
-                'lineTwo' => $lineTwo,
-                'district' => $district,
                 'city' => $city,
                 'postalCode' => $postalCode,
                 'countryCode' => $countryCode,
@@ -96,9 +87,7 @@ class AddressController extends Controller
         ]);
 
         if (!$validate) {
-            return response([
-                'message' => 'an error occurred'
-            ], 400);
+            abort(400, 'form invalid');
         }
 
         $address = Address::firstOrCreate([

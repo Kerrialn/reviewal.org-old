@@ -1,4 +1,5 @@
 import store from './index'
+import AddressAutocompleteForm from "@/components/CreateForm/AddressAutocompleteForm"
 import AddressForm from "@/components/CreateForm/AddressForm"
 import ReviewForm from "@/components/CreateForm/ReviewForm"
 import RatingForm from "@/components/CreateForm/RatingForm"
@@ -24,7 +25,7 @@ export default {
         {
           id: 1,
           label: "Address",
-          component: AddressForm,
+          component: AddressAutocompleteForm || AddressForm,
           displayed: true,
         },
         {
@@ -97,21 +98,27 @@ export default {
     },
     async submit(_, form){
         store.commit('setLoading', true)
-        await axois.post('create', form).then(()=>{
+        return await axois.post('create', form).then(()=>{
           Toast.open({
             message: `Review created <b>successfully</b>`,
             type: 'is-success'
           })
           store.commit('setLoading', false)
-        }).catch(()=>{
+        }).catch((e)=>{
+          console.log(e)
           Toast.open({
-            message: `An error occurred`,
+            message: e.message,
             type: 'is-danger'
           })
         }).finally(()=>{
           store.commit('setLoading', false)
         })
       },
+      resetForm(){
+        this.setAddress({})
+        this.setReview({})
+        this.setRating({})
+      }
     },
   mutations: {
     setActive(state, newActiveState){
@@ -128,6 +135,9 @@ export default {
     },
     setAddress(state, newAddressState){
       state.address = newAddressState
+    },
+    setAddressComponent(state, newAddressComponentState){
+      state.stages.steps[0].component = newAddressComponentState
     },
     setReview(state, newReviewState){
       state.review = newReviewState
