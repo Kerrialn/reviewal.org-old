@@ -14,13 +14,15 @@ class AddressController extends Controller
 
         $premise = strtolower($request->input('premise'));
         $floor = $request->input('floor');
-        $lineOne = strtolower($request->input('lineOne'));
+        $lineOne = strtolower($request->input('line_one'));
         $city = strtolower($request->input('city'));
         $postalCode = strtolower($request->input('postalCode'));
-        $countryCode = strtolower($request->input('countryCode'));
+
+
+        $addresses = Address::where('country_code', '=', 'cz');
 
         if ($premise) {
-            $addresses = Address::where('premise', '=', $premise);
+            $addresses =  $addresses->where('premise', '=', $premise);
         }
 
         if ($floor) {
@@ -39,23 +41,8 @@ class AddressController extends Controller
             $addresses->where('postal_code', '=', $postalCode);
         }
 
-        if ($countryCode) {
-            $addresses->where('country_code', 'LIKE', $countryCode);
-        }
-
         $addresses->limit(10);
-
-        return [
-            'search' => [
-                'premise' => $premise,
-                'floor' => $floor,
-                'lineOne' => $lineOne,
-                'city' => $city,
-                'postalCode' => $postalCode,
-                'countryCode' => $countryCode,
-            ],
-            'addresses' => $addresses->get(),
-        ];
+        return $addresses->get();
     }
 
     /**
