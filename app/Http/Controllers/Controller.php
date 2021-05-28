@@ -38,7 +38,7 @@ class Controller extends BaseController
             $address->save();
 
             $hasUserReviewedBefore = Address::find($address->id)->with(['reviews' => function ($query) use ($user) {
-                return $query->where('user_id', '=>', $user->id);
+                return $query->where('user_id', '=', $user->id);
             }])->exists();
 
             if ($hasUserReviewedBefore) {
