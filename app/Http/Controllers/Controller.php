@@ -35,11 +35,9 @@ class Controller extends BaseController
                 'postal_code'  => strtolower($request->address['postal_code']),
                 'country_code' => strtolower($request->address['country_code']),
             ]);
-
-            $address->id = Str::uuid();
             $address->save();
 
-            $hasUserReviewedBefore = Address::find($address->id)->with(['reviews' => function ($query) use ($user) {
+            $hasUserReviewedBefore = Address::where($address->id)->with(['reviews' => function ($query) use ($user) {
                 return $query->where('user_id', '=>', $user->id);
             }])->exists();
 
