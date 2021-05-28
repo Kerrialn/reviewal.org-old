@@ -26,7 +26,7 @@ class Controller extends BaseController
     public function create(Request $request)
     {
         $user = Auth::user();
-        $address = Address::firstOrCreate([
+        $address = Address::firstOrNew([
             'premise'  => $request->address['premise'],
             'floor'  => $request->address['floor'],
             'line_one'  => strtolower($request->address['line_one']),
@@ -34,6 +34,8 @@ class Controller extends BaseController
             'postal_code'  => strtolower($request->address['postal_code']),
             'country_code' => strtolower($request->address['country_code']),
         ]);
+
+        $address->id = Str::uuid();
         $address->save();
 
         $hasUserReviewedBefore = Address::find($address->id)->with(['reviews' => function ($query) use ($user) {
