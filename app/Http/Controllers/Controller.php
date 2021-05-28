@@ -12,6 +12,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class Controller extends BaseController
 {
@@ -26,6 +27,7 @@ class Controller extends BaseController
     {
         $user = Auth::user();
         $address = Address::firstOrCreate([
+            'id' => Str::uuid(),
             'premise'  => $request->address['premise'],
             'floor'  => $request->address['floor'],
             'line_one'  => strtolower($request->address['line_one']),
