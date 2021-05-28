@@ -6,6 +6,7 @@ use App\Models\Address;
 use App\Models\General;
 use App\Models\Rating;
 use App\Models\Review;
+use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -37,12 +38,13 @@ class Controller extends BaseController
             ]);
             $address->save();
 
-            $hasUserReviewedBefore = Address::find($address->id)->with(['reviews' => function ($query) use ($user) {
-                return $query->where('user_id', '=', $user->id);
-            }])->exists();
+            $isReviewed = Review::where([
+                'user_id' => $user->id,
+                'address_id' => $address->id
+            ])->exists();
 
-            if ($hasUserReviewedBefore) {
-                abort(400, 'address already reviewed');
+            if ($isReviewed) {
+                abort(400, 'already done');
             }
 
             $review = Review::create([
