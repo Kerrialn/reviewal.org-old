@@ -16,7 +16,7 @@ class AddressController extends Controller
         $floor = $request->input('floor');
         $lineOne = strtolower($request->input('line_one'));
         $city = strtolower($request->input('city'));
-        $postalCode = strtolower($request->input('postalCode'));
+        $postalCode = strtolower($request->input('postal_code'));
 
 
         $addresses = Address::where('country_code', '=', 'cz');
