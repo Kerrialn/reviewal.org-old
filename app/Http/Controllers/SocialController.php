@@ -17,10 +17,10 @@ class SocialController extends Controller
     public function Callback($provider)
     {
         $userSocial = Socialite::driver($provider)->stateless()->user();
-        $users = User::where(['email' => $userSocial->getEmail()])->first();
-        if ($users) {
-            Auth::login($users);
-            return response([], 204);
+        $isUser = User::where(['email' => $userSocial->getEmail()])->first();
+        if ($isUser) {
+            Auth::login($isUser);
+            return response(['message' => 'login successful'], 200);
         } else {
             $user = User::create([
                 'name'          => $userSocial->getName(),
@@ -29,7 +29,7 @@ class SocialController extends Controller
                 'provider'      => $provider,
             ]);
 
-            return response([], 204);
+            return response(['message' => 'registration successful'], 201);
         }
     }
 }
