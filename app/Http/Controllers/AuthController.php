@@ -87,4 +87,5 @@ class AuthController extends Controller
       'message' => 'registration successful'
     ], 201);
   }
+
 }

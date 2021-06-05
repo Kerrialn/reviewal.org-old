@@ -5,8 +5,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\VerificationController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,3 +42,6 @@ Route::middleware('auth:api')->group(function () {
 
 Route::get('email/verify/{id}', [VerificationController::class, 'verify'])->name('verification.verify');
 Route::get('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+
+Route::get('auth/{provider}', 'SocialController@redirect');
+Route::get('auth/{provider}/callback', 'SocialController@Callback');
