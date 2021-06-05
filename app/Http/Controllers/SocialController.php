@@ -14,7 +14,7 @@ class SocialController extends Controller
         return Socialite::driver($provider)->redirect();
     }
 
-    public function Callback($provider)
+    public function callback($provider)
     {
         $userSocial = Socialite::driver($provider)->stateless()->user();
         $isUser = User::where(['email' => $userSocial->getEmail()])->first();

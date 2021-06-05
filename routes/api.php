@@ -43,5 +43,5 @@ Route::middleware('auth:api')->group(function () {
 Route::get('email/verify/{id}', [VerificationController::class, 'verify'])->name('verification.verify');
 Route::get('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
-Route::get('auth/{provider}', 'SocialController@redirect');
-Route::get('auth/{provider}/callback', 'SocialController@Callback');
+Route::get('auth/{provider}', [SocialController::class, 'redirect']);
+Route::get('auth/{provider}/callback', [SocialController::class], 'callback');
