@@ -21,8 +21,7 @@ class SocialController extends Controller
         $user = User::where(['email' => $userSocial->getEmail()])->first();
         if ($user) {
             Auth::login($user);
-            $token = $this->getAccessToken($user);
-            return response(['message' => 'login successful', 'token' => $token, 'redirect' => 'Dashboard'], 200);
+            return response(['message' => 'login successful', 'redirect' => 'Dashboard'], 200);
         } else {
             $user = User::create([
                 'name'          => $userSocial->getName(),
@@ -32,13 +31,7 @@ class SocialController extends Controller
                 'provider'      => $provider,
             ]);
 
-            $token = $this->getAccessToken($user);
-            return response(['message' => 'registration successful', 'token' => $token, 'redirect' => 'Dashboard'], 201);
+            return response(['message' => 'registration successful', 'redirect' => 'Dashboard'], 201);
         }
-    }
-
-    private function getAccessToken(User $user)
-    {
-        return $user->createToken('PERSONAL_ACCESS_TOKEN')->accessToken;
     }
 }
