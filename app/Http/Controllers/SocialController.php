@@ -21,7 +21,7 @@ class SocialController extends Controller
         $user = User::where(['email' => $userSocial->getEmail()])->first();
         if ($user) {
             Auth::login($user);
-            return response(['message' => 'login successful', 'redirect' => 'Dashboard'], 200);
+            return redirect('http://www.reviewal.org/dashboard');
         } else {
             $user = User::create([
                 'name'          => $userSocial->getName(),
@@ -31,7 +31,8 @@ class SocialController extends Controller
                 'provider'      => $provider,
             ]);
 
-            return response(['message' => 'registration successful', 'redirect' => 'Dashboard'], 201);
+            Auth::login($user);
+            return redirect('http://www.reviewal.org/dashboard');
         }
     }
 }
