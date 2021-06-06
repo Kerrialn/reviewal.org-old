@@ -39,9 +39,10 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('reviews', ReviewController::class);
 });
 
-
 Route::get('email/verify/{id}', [VerificationController::class, 'verify'])->name('verification.verify');
 Route::get('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
-Route::get('auth/{provider}', [SocialController::class, 'redirect']);
-Route::get('auth/{provider}/callback', [SocialController::class], 'callback');
+Route::group(['middleware' => ['web']], function () {
+    Route::get('auth/{provider}/', [SocialController::class, 'redirect'])->name('social.redirect');
+    Route::get('auth/{provider}/callback/', [SocialController::class, 'callback'])->name('social.callback');
+});

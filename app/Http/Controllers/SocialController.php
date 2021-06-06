@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialController extends Controller
@@ -26,12 +27,12 @@ class SocialController extends Controller
             $user = User::create([
                 'name'          => $userSocial->getName(),
                 'email'         => $userSocial->getEmail(),
+                'password' => Hash::make('12345678'),
                 'provider_id'   => $userSocial->getId(),
                 'provider'      => $provider,
             ]);
 
             $token = $this->getAccessToken($user);
-
             return response(['message' => 'registration successful', 'token' => $token, 'redirect' => 'Dashboard'], 201);
         }
     }
