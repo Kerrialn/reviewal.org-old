@@ -21,7 +21,7 @@ class SocialController extends Controller
         $user = User::where(['email' => $userSocial->getEmail()])->first();
         if ($user) {
             Auth::login($user);
-            return redirect('http://www.reviewal.org/dashboard');
+            return redirect('https://www.reviewal.org/dashboard');
         } else {
             $user = User::create([
                 'name'          => $userSocial->getName(),
@@ -32,7 +32,7 @@ class SocialController extends Controller
             ]);
 
             Auth::login($user);
-            return redirect('http://www.reviewal.org/dashboard');
+            return redirect('https://www.reviewal.org/dashboard');
         }
     }
 }
