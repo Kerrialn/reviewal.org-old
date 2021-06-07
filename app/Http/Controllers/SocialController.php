@@ -11,12 +11,12 @@ class SocialController extends Controller
 {
     public function redirect($provider)
     {
-        return Socialite::driver($provider)->redirect()->getTargetUrl();
+        return Socialite::driver($provider)->stateless()->redirect();
     }
 
     public function callback($provider)
     {
-        $userSocial = Socialite::driver($provider)->user();
+        $userSocial = Socialite::driver($provider)->stateless()->user();
 
         $user = User::where(['email' => $userSocial->getEmail()])->first();
         if ($user) {
