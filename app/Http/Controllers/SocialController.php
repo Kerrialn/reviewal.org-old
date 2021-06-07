@@ -11,7 +11,7 @@ class SocialController extends Controller
 {
     public function redirect($provider)
     {
-        return Socialite::driver($provider)->redirect();
+        return Socialite::driver($provider)->stateless()->redirect();
     }
 
     public function callback($provider)
@@ -21,7 +21,7 @@ class SocialController extends Controller
         $user = User::where(['email' => $userSocial->getEmail()])->first();
         if ($user) {
             Auth::login($user);
-            return redirect('https://www.reviewal.org/dashboard');
+            return $this->issueAccessToken($user);
         } else {
             $user = User::create([
                 'name'          => $userSocial->getName(),
@@ -32,7 +32,12 @@ class SocialController extends Controller
             ]);
 
             Auth::login($user);
-            return redirect('https://www.reviewal.org/dashboard');
+            return $this->issueAccessToken($user);
         }
+    }
+
+    public function issueAccessToken($user)
+    {
+        return $user->createToken('SOCIAL_ACCESS_TOKEN')->accessToken;
     }
 }
